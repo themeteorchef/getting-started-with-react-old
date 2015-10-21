@@ -27,7 +27,6 @@ kadira:blaze-layout
 meteorhacks:fast-render
 meteor-base
 session
-templating
 fourseven:scss
 stevezhu:lodash
 reactive-var
