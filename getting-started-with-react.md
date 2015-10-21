@@ -23,7 +23,7 @@ We'll use this package to make it easy to render React components in our applica
 ### The goal
 Our goal with this recipe is to get a basic understanding of React, how it works, and some of the considerations we need to make when moving an application from Blaze (Meteor's default user interface library). To do this, we'll focus on a refactor of [Base](http://themeteorchef.com/base), the starter kit used for recipes here at The Meteor Chef. This will give us a small scope to work within, enough to aid in our comprehension of React but not so much that it's overwhelming. How considerate!
 
-The number one thing to keep in mind about React is that it is _only responsible for the view layer_. This means that anything not related to our templates or template logic does not need to be refactored. Our focus is on taking all of the Blaze-specific code in Base and converting it to React. That's it. Take a deep breath. React has been getting a lot of hype which inevitable leads to fear of being left out. Don't worry, as [it was suggested here](http://themeteorchef.com/blog/react-vs-blaze), React is simply another way to build our interfaces, not law (despite what Mark Zuckerberg and Co. may desire).
+The number one thing to keep in mind about React is that it is _only responsible for the view layer_. This means that anything not related to our templates or template logic does not need to be refactored. Our focus is on taking all of the Blaze-specific code in Base and converting it to React. That's it. Take a deep breath. React has been getting a lot of hype which inevitably leads to fear of being left out. Don't worry, as [it was suggested here](http://themeteorchef.com/blog/react-vs-blaze), React is simply another way to build our interfaces, not law (despite what Mark Zuckerberg and Co. may desire).
 
 #### JSX
 
@@ -32,10 +32,10 @@ To get the job done, we'll be relying on a new syntax (and file format) introduc
 Ready to de-Blaze Base and board Spaceship React? Suit up!
 
 ### Converting existing templates to React components
-Our first task is to simply refactor each of the major (we're going to leave out the `loading` template and the `notFound` template in the article) Blaze-based templates in Base into React components. We'll go file-by-file, combining the existing HTML and JavaScript for each template into singular components. As we'll see, by the time we finish we'll end up repeating a lot so if you feel confident you understand the higher-level points, don't be afraid to skip ahead. Ready to rock? Let's start with the `login` template.
+Our first task is to simply refactor each of the major (we're going to leave out the `notFound` template in the article) Blaze-based templates in Base into React components. We'll go file-by-file, combining the existing HTML and JavaScript for each template into singular components. As we'll see, by the time we finish we'll end up repeating a lot so if you feel confident you understand the higher-level points, don't be afraid to skip ahead. Ready to rock? Let's start with the `login` template.
 
 #### Login
-What better place to start than the entry point to our application? To get started, we actually need to start by renaming our `/client/templates` directory to `/client/components`. Why? Well, we want to ensure that we're not confusing ourselves later. When we're working with React, the code we'll write will be referred to as a "component," so it makes sense to rename now. Cool? 
+What better place to start than the entry point to our application? To get started, we actually need to start by renaming our `/client/templates` directory to `/client/components`. Why? Well, we want to ensure that we're not confusing ourselves later. When we're working with React, the code we'll write will be referred to as a "component," so it makes sense to rename now.
 
 Next, inside of the `/client/components/public` folder, we'll want to create a new file called `login.jsx` and add the skeleton for our new component.
 
@@ -52,7 +52,7 @@ Login = React.createClass({
 ```
 A few things to point out. First, notice that when we create a React component in our application, we want to assign it to a _global_ variable. Why? This is so that we can see the component throughout our application. Because we're working with a limited number of components in this app, using a global isn't the _worst_ thing we can do. If you're working on a bigger app, though, it may be worth namespacing your components (e.g. `Components.Login`). Up to you.
 
-Next, notice that all component definitions start with a call to `React.createClass()` accepting an object with methods defined on it. By default, the `render()` method we've defined here is the only method that our component _must_ have. Everything else is optional depending on the functionality of our component.
+Next, notice that all component definitions start with a call to `React.createClass()` accepting an object with methods (and properties) defined on it. By default, the `render()` method we've defined here is the only method that our component _must_ have. Everything else is optional depending on the functionality of our component.
 
 Once we have this in place, we can open up `/client/components/index.html` (remember, we renamed this directory from `/templates` so try not to get confused) and copy the contents—excluding the `<template>` tags and paste them _within_ the `return()` statement of our component's `render()` method. Once we've pasted, we'll need to make a few changes to the markup to make sure it's React-friendly. We're going to output the refactored version of this below and step through it. If you get stuck, make sure to [reference the source for the template](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.html).
 
@@ -89,13 +89,13 @@ Okay? It looks the same? Almost! This is one of the first "gotchas" of React. No
 
 First, the easiest thing to point out is that instead of `class`, we're using `className`. Why? This is a React thing. As one of the React core-team members [pointed out here](https://www.quora.com/Why-do-I-have-to-use-className-instead-of-class-in-ReactJs-components-done-in-JSX/answer/Ben-Alpert) it's done as an aid to how they process code behind the scenes as well as padding for the future. The thing to keep in mind is that if we _do not_ change this, React will throw an error in our console and our classes will not be applied correctly. Okay. Not too big a deal.
 
-Next, look at our `<label>` tags and their `for` attribute. This needs to be changed to `htmlFor`. Again, the same logic applies here. While we'll only see a handful during our refactor, you can find [a full list of the attributes that React supports](https://facebook.github.io/react/docs/tags-and-attributes.html) in our JSX code here. Okay we got those in place...anything else?
+Next, look at our `<label>` tags and their `for` attribute. This needs to be changed to `htmlFor`. Again, the same logic applies here. While we'll only see a few during our refactor, you can find [a full list of the attributes that React supports here](https://facebook.github.io/react/docs/tags-and-attributes.html). Okay we have those in place...anything else?
 
 On our `<input>` tags, notice that we've added the trailing `/`. In our templates this wasn't required (we don't need these in HTML5), but in React _they are_ required. The purpose here is error avoidance. Without these, React still considers the `<input>` tag open and fails to parse our code correctly. [Zuckerberg](https://youtu.be/xtdY6oH4rSU?t=8s)!
 
-Okay okay. Two more things. First, notice that all of our `{{pathFor}}` helpers have been replaced by regular routes. What gives? Well, obviously we don't have access to our template helpers so we need to come up with a solution. Here, we know that the paths we're calling to—`/recover-password` and `/signup`—don't have any dynamic data like paramters, so we can just past the regular path. 
+Okay okay. Two more things. First, notice that all of our `{{pathFor}}` helpers have been replaced by regular routes. What gives? Well, obviously we don't have access to our template helpers so we need to come up with a solution. Here, we know that the paths we're calling to—`/recover-password` and `/signup`—don't have any dynamic data like parameters, so we can just past the regular path. 
 
-Don't worry, later on, we'll refactor our template helpers used for things like `pathFor` to be React-friendly. For now, though, we can leave these as plain relative URLs and they'll work fine. After we cover the helper refactor, you're welcome to come back and replace them. Whatever floats your boat!
+Don't worry, later on we'll refactor our template helpers used for things like `pathFor` to be React-friendly. For now, though, we can leave these as plain relative URLs and they'll work fine. After we cover the helper refactor, you're welcome to come back and replace them. Whatever floats your boat!
 
 Okay, we've saved the biggest heart attack for last: events. Notice that on our `<form>` element, we've added a new attribute `onSubmit` and have pointed it to `{this.handleSubmit}`. What is that? This is how React handles events. Instead of defining an event handler using `Template.login.events()` like we do with Blaze, here, we specify a function to call when our form's `onSubmit` event happens. Here, we're trying to call to `this.handleSubmit`. Where is that? Let's update our component code quick.
 
@@ -154,11 +154,11 @@ Login = React.createClass({
 });
 ```
 
-Introducing `componentDidMount()`, [one of many oddly named methods]() in React. Notice that inside, we've placed the contents of the JavaScript from [our template's `onRendered` callback](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.js#L1). Neat! As the name implies, this is the method that's called as soon as our React component is "mounted" or rendered on screen.
+Introducing `componentDidMount()`, [one of many oddly named methods](http://themeteorchef.com/blog/react-vs-blaze/#tmc-react-methods-vs-blaze-methods) in React. Notice that inside, we've placed the contents of the JavaScript from [our template's `onRendered` callback](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.js#L1). Neat! As the name implies, this is the method that's called as soon as our React component is "mounted" or rendered on screen.
 
 This is more-or-less identical to how Blaze's `Template.<name>.onRendered()` method works. Easy enough for us, we can just drop our module in and we're done! Well, almost. As we'll see, we'll need to make some microscopic changes to our modules to ensure they work well with our components.
 
-For now, let's continue on to our `signup` template. Heads up, you can delete the existing `login.html` and `login.js` (careful not to delete the `.jsx` file) files in our `/client/components/public` directory.
+For now, let's continue on to our `signup` template. Heads up, you can delete the existing `login.html` and `login.js` (careful not to delete the `.jsx` file) files in our `/client/components/public` directory. You will want to do this after each of the following refactors (unless you want to keep them around for reference).
 
 #### Signup
 Here comes the wave of repetition. Are you ready? There's not much different from our `login` template in terms of changes, so let's dump out our refactor and step through it.
@@ -314,7 +314,7 @@ Index = React.createClass({
 
 Wait a minute! Spot it? Aside from our usual updates, you'll also notice that we've had to make a little change to our inline styles. Instead of simply passing our styles in `""`, now, we have to pass an object with the names of our styles in `camelCase` and our values in quotes. One thing to point out here is the syntax. Before, you'll notice that we can reference JavaScript inline in our component using `{}` brackets. Here, we have double brackets `{{}}`. Why is that? 
 
-This is because the first set of brackets is meant to identify JavaScript code, while the second is the actual object that we need to return. With this object, React takes to properties and converts them to inline styles accordingly. Make sense?
+This is because the first set of brackets is meant to identify JavaScript code, while the second is the actual object that we need to return. With this object, React takes the properties and converts them to inline styles accordingly. Make sense?
 
 <div class="note success">
   <h3>This could be a method <i class="fa fa-thumbs-up"></i></h3>
@@ -408,18 +408,18 @@ AuthenticatedNavigation = React.createClass({
 ```
 A little more action! First, notice that the contents of this file are nearly identical to our existing `authenticatedNavigation` template in Blaze. The difference is that instead of just including our two `<ul></ul>` elements, we're wrapping them in the `#navbar-collapse` element. As you'll see next, we'll do the same thing with our `publicNavigation` template's refactor, introducing a bit of repetition. This is a pretty big gotcha with React. 
 
-When we're returning the markup/`JSX` for our component, React will throw a temper tantrum if we include more than one root element. The root element is the top-most level element in our `return()` statement. Without the `#navbar-collapse` wrapper, we'd technically have _two_ elements, sending React into a rendition of [It's My Party and I'll Cry If I Want To](https://www.youtube.com/watch?v=bbOrjHBaDzQ). Alas, this is The React Way™. 
+When we're returning the markup/`JSX` for our component, React will throw a temper tantrum if we include more than one root element. The root element is the top-most level element in our `return()` statement. Without the `#navbar-collapse` wrapper, we'd technically have _two_ elements, sending React into a rendition of [It's My Party and I'll Cry If I Want To](https://youtu.be/KhAg5po8InY?t=6s). Alas, this is The React Way™. 
 
-With that out of the way, notice we're starting to mimic our Blaze template helpers a little bit with our call to `this.currentUserEmail()`, a method that return the logged in user's email address. This is equivalent to our call to `{{currentUser.emails.[0].address}}` in our Blaze template. Again, we invoke the method here to get the return value (without this would just be empty).
+With that out of the way, notice we're starting to mimic our Blaze template helpers a little bit with our call to `this.currentUserEmail()`, a method that returns the logged in user's email address. This is equivalent to our call to `{{currentUser.emails.[0].address}}` in our Blaze template. Again, we invoke the method here to get the return value (without this, it would just be empty).
 
 Lastly, notice that in order to handle the logout option for our users, we've added an `onClick` event to the "Logout" element in our dropdown menu. This simply calls to `Meteor.logout` _without_ the invocation `()`. Wait...how does that work? Well, when our event is called, the function specified here will be invoked for us so we can skip it. 
 
 <div class="note">
   <h3>Why wrap the email part? <i class="fa fa-warning"></i></h3>
-  <p>You may be wondering, "couldn't we just pass the result of our <code>currentUserEmail</code> method directly?" Yep! The point here is to showcase two different means for calling and using functions in our JSX. You could just as easily replace <code>{this.currentUserEmail()}</code> with <code>Meteor.user().emails[0].address</code>.</p>
+  <p>You may be wondering, "couldn't we just pass the result of our <code>currentUserEmail</code> method directly?" Yep! The point here is to showcase two different means for calling and using functions in our JSX. You could just as easily replace <code>{this.currentUserEmail()}</code> with <code>{Meteor.user().emails[0].address}</code>.</p>
 </div>
 
-The difference between this and the email is that we want to call `currentUserEmail()` immediately when the component renders and `Meteor.logout` only when the `onClick` event fires. If you invoked this automatically, as soon as this template renders the user would be logged out! Unless you're a trickster, you probably don't want that.
+The difference between this and the email is that we want to call `currentUserEmail()` immediately when the component renders and `Meteor.logout` only when the `onClick` event fires. If you invoked this automatically, as soon as this component renders the user would be logged out! Unless you're a trickster, you probably don't want that.
 
 Okay, that's it! Oh...wait. That `FlowHelpers` part. Ignore that until we get to the section where we refactor our helpers. [M'kay](https://www.youtube.com/watch?v=KqOsrniBooQ)?
 
@@ -483,9 +483,9 @@ Dashboard = React.createClass({
   }
 });
 ```
-So. Let's rap. First, notice that we're introducing a new parameter on our component called `mixins` which is assigned an array with a single argument `ReactMeteorData`. This is the magic behind the `react` package developed by MDG. With this single line, we get support for the `getMeteorData()` method along with a lot of bheind the scenes goodies that make it really easy to work with reactive data in our application. The part to pay attention to here is the `getMeteorData()` method. 
+So. Let's rap. First, notice that we're introducing a new parameter on our component called `mixins` which is assigned an array with a single argument `ReactMeteorData`. This is the magic behind the `react` package developed by the Meteor Development Group that we installed earlier. With this single line, we get support for the `getMeteorData()` method along with a lot of behind the scenes goodies that make it really easy to work with reactive data in our application using React. The part to pay attention to here is the `getMeteorData()` method. 
 
-Here, when we're working with any reactive data in our component, we want to make sure that it's referenced here. Notice that we start by calling to a subscription for our dashboard template `dashboard`, followed by the return of an object with two properties: a check to see if our subscription is ready (so we can display a loader if not) and a call to `People.find().fetch()`. Hold up! What is that? To help speed us up, we've set up a collection called `People` in the application along with a publication for `dashboard`. Behind the scenes, on startup, we're automatically inserting five fake people into the `People` collection if they don't already exist. Here's what we're after:
+Here, when we're working with any reactive data in our component, we want to make sure that it's referenced inside of `getMeteorData()`. Notice that we start by calling to a subscription for our dashboard template `dashboard`, followed by the return of an object with two properties: a check to see if our subscription is ready (so we can display a loader if not) and a call to `People.find().fetch()`. Hold up! What is that? To help speed us up, we've set up a collection called `People` in the application along with a publication for `dashboard`. Behind the scenes, on startup, we're automatically inserting five fake people into the `People` collection if they don't already exist. Here's what we're after:
 
 <figure>
   <img src="https://tmc-post-content.s3.amazonaws.com/Screen-Shot-2015-10-20-18-06-12.png" alt="A list of people with a photo, name, and email address.">
@@ -507,7 +507,7 @@ Loading = React.createClass({
   }
 });
 ```
-Pretty simple. A single icon. Notice that here we're making use of React's inline styles technique, too. Look at us! Nothing much here, so let's move back up to our `Dashboard` component and look at the next component inclusion. 
+Pretty simple. A single icon. Notice that here we're making use of React's inline styles technique again. Look at us! Nothing much here, so let's move back up to our `Dashboard` component and look at the next component inclusion. 
 
 <p class="block-header">/client/components/globals/loading.jsx</p>
 
@@ -561,7 +561,7 @@ PeopleTable = React.createClass({
 });
 ```
 
-Nothing we haven't seen yet, except for the content of `<tbody>`. Here, we're encountering our first usage of a loop in a React component. Like we described, notice that we can access the `people` prop we defined in our `Dashboard` component by calling `this.props.people`. This is a bit funky. Notice that we're also appending a call to `.map()` on the end of this. All of this is happening within React's `{}` bracket syntax for running JavaScript code inside of our component. Here, we're saying to map over the array of people we found in the database, and for each one, include the `<Person />` component, passing the current index of the loop as the `key` prop (`key` is required by React in a loop) and the current _person_ being iterated in the map as the `person` prop. A quick look at `<Person />`:
+Nothing we haven't seen yet, except for the contents of `<tbody>`. Here, we're encountering our first usage of a loop in a React component. Like we described, notice that we can access the `people` prop we defined in our `Dashboard` component by calling `this.props.people`. This is a bit funky. Notice that we're also appending a call to `.map()` on the end of this. All of this is happening within React's `{}` bracket syntax for running JavaScript code inside of our component. Here, we're saying to map over the array of people we found in the database, and for each one, include the `<Person />` component, passing the current index of the loop as the `key` prop (`key` is required by React in a loop) and the current _person_ being iterated in the map as the `person` prop. A quick look at `<Person />`:
 
 <p class="block-header">/client/components/authenticated/person.jsx</p>
 
@@ -591,7 +591,7 @@ Why the `key`, though? We're not using it in here. From [the React docs](https:/
 >
 > The key should always be supplied directly to the components in the array, not to the container HTML child of each component in the array [...]
 
-Translation? This ensures that any children of a component (in this case, our `<Person />` components) are not messed up by re-rendering or changes to the parent component. The `key` proper allows React to keep track of the state of each child without losing its marbles. A bit quirky, but easy enough to commit to memory.
+Translation? This ensures that any children of a component (in this case, our `<Person />` components) are not messed up by re-rendering or changes to the parent component. The `key` property allows React to keep track of the state of each child without losing its marbles. A bit quirky, but easy enough to commit to memory.
 
 ...and that's it! We're done with refactoring our templates. Pretty easy, yeah? As we can see, the big jump from React to Blaze is nothing more than syntax and some new naming conventions. It should be clear at this point that usage of React vs. Blaze is a matter of taste and organization. Everything we've showecased here can be accomplished with Blaze, just in a different way. 
 
@@ -660,7 +660,7 @@ Not too shabby! That's all we need for now. Next up: routes.
 Now we're in the home stretch! Aside from updating our templates, we also need to update our routes. Wait, why? Recall that because we're using Flow Router, we're also using the [BlazeLayout](https://github.com/kadirahq/blaze-layout) package to help us render our Blaze templates. Now, we need to do the exact same thing, just with that package's companion [ReactLayout](https://github.com/kadirahq/meteor-react-layout). This will be easy, we're just swapping a few things in. **Heads up**: Because we'll be using some `JSX` code in our routes, we'll want to make sure we update each of our routes files to use the `.jsx` file type.
 
 #### Our default layout
-Ok, I lied. We do need to fix one thing real quick: our default layout template. Recall that in Base, we rely on a template called `default` to wrap all of our othe templates when rendering routes. This is the last template to component refactor, I swear. 99% of it is stuff we already know. Let's look at it:
+Ok, I lied. We do need to fix one thing real quick: our default layout template. Recall that in Base, we rely on a template called `default` to wrap all of our othe templates when rendering routes. This is the last template-to-component refactor, I swear. 99% of it is stuff we already know. Let's look at it:
 
 <p class="block-header">/client/componetns/layouts/default.jsx</p>
 
@@ -680,9 +680,9 @@ Default = React.createClass({
 ```
 Simple. Notice, here, we're including the `<AppHeader />` component we defined earlier (with our nested `<AuthenticatedNavigation />` and `<PublicNavigation />` components). Inside of our `.container` element, we're making a call to `this.props.yield`. What's that? Remember, `props` are how we pass data in from a parent component. In this case, when we set up ReactLayout, we'll see that it allows us to specify the name of the prop where we want a component to render. In our case, we'll pass our component to a prop called `yield` which will display the component we pass where we're calling `{this.props.yield}`.
 
-Also, we should point out the usage of the `.app-root` element. Yep, you guesses it: the one root element rule. Because we're including our `<AppHeader />` component as well as our `.container` element, we have to wrap them in order to avoid a meltdown. C'est la vie.
+Also, we should point out the usage of the `.app-root` element. Yep, you guessed it: the one root element rule. Because we're including our `<AppHeader />` component as well as our `.container` element, we have to wrap them in order to avoid a meltdown. C'est la vie.
 
-Okay. Route! For real!
+Okay. Routes! For real!
 
 #### Public routes
 This will go quick. All we need to do is update our calls to `BlazeLayout.render()` to instead use `ReactLayout.render()`, passing our layout component's variable and passing the component we want to render in place of `{this.props.yield}`.
@@ -762,7 +762,7 @@ FlowRouter.notFound = {
 
 [...]
 ```
-Yup, easy! Keep in mind, we didn't refactor our `notFound` template into the `<NotFound />` component in this article, but [it is visible in the source for the recipe]().
+Yup, easy! Keep in mind, we didn't refactor our `notFound` template into the `<NotFound />` component in this article, but [it is visible in the source for the recipe](https://github.com/themeteorchef/getting-started-with-react/blob/master/code/client/components/globals/not-found.jsx).
 
 ### Updating our Flow Router helpers
 Last step! It's time to get those helpers we're using for our routes up to date. Two of them are used in Base and one is included as a backup. Let's take a look at how they've been refactored, discuss the changes, and then showcase an example of their usage. Real quick, promise.
@@ -793,7 +793,7 @@ FlowHelpers = {
 
 We've technically lost some weight here. Remember, before, we were making use of [global template helpers](http://themeteorchef.com/snippets/using-global-template-helpers) to get back the values above. Now, because we're removing Blaze, all we need are good ol' fashioned functions. For convenience, we've created a global variable at the bottom of our helpers file called `FlowHelpers`, assigning each of the methods to a parameter name so we can call them easily later.
 
-The big change here is in the `pathFor` helper. Here, we've removed all references to the `hash` property that we got from our Spacebars helpers (the hash is what contained the values assigned like `{{pathFor hashProp="something" anotherHashProp="this thing"}}`). Here, we don't have that so we've ripped it all out. Instead, we accept the `path` value like we did before and update the `hash` value to simply be `params`. When this is called then, our code will look like `FlowHelpers.pathFor( 'routeName', { paramName: 'blah', query: { queryParam: 'blah' } } );`. Despite the usage of objects, it's more-or-less what we had with the original helper. 
+The big change here is in the `pathFor` helper. Here, we've removed all references to the `hash` and `view` properties that we got from our Spacebars helpers (the hash is what contained the values assigned like `{{pathFor hashProp="something" anotherHashProp="this thing"}}`). Here, we don't have that so we've ripped it all out. Instead, we accept the `path` value like we did before and update the `hash` value to simply be `params`. When this is called then, our code will look like `FlowHelpers.pathFor( 'routeName', { paramName: 'blah', query: { queryParam: 'blah' } } );`. Despite the usage of objects, it's more-or-less what we had with the original helper. 
 
 The same applies here for `urlFor` (after all, it's just a wrapper around `pathFor` using `Meteor.absoluteUrl`). `currentRoute` is identical to its predecessor, the only difference being that it's a vanilla JavaScript function now instead of a call to `Template.registerHelper`. If you've been following along, usage of these is what you'd expect. Reprising our `<PublicNavigation />` component:
 
