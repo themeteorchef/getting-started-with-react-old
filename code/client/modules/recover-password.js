@@ -1,12 +1,12 @@
 let recoverPassword = ( options ) => {
-  _validate( options.form, options.template );
+  _validate( options.form );
 };
 
-let _validate = ( form, template ) => {
-  $( form ).validate( validation( template ) );
+let _validate = ( form ) => {
+  $( form ).validate( validation() );
 };
 
-let validation = ( template ) => {
+let validation = () => {
   return {
     rules: {
       emailAddress: {
@@ -20,12 +20,12 @@ let validation = ( template ) => {
         email: 'Is this email address legit?'
       }
     },
-    submitHandler() { _handleRecovery( template ); }
+    submitHandler() { _handleRecovery(); }
   };
 };
 
 let _handleRecovery = ( template ) => {
-  let email = template.find( '[name="emailAddress"]' ).value;
+  let email = $( '[name="emailAddress"]' ).val();
 
   Accounts.forgotPassword( { email: email }, ( error ) => {
     if ( error ) {

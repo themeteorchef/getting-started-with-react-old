@@ -1,6 +1,6 @@
 FlowRouter.notFound = {
   action() {
-    BlazeLayout.render( 'default', { yield: 'notFound' } );
+    ReactLayout.render( Default, { yield: <NotFound /> } );
   }
 };
 

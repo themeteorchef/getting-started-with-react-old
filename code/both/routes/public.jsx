@@ -12,27 +12,27 @@ const publicRoutes = FlowRouter.group({
 publicRoutes.route( '/signup', {
   name: 'signup',
   action() {
-    BlazeLayout.render( 'default', { yield: 'signup' } );
+    ReactLayout.render( Default, { yield: <Signup /> } );
   }
 });
 
 publicRoutes.route( '/login', {
   name: 'login',
   action() {
-    BlazeLayout.render( 'default', { yield: 'login' } );
+    ReactLayout.render( Default, { yield: <Login /> } );
   }
 });
 
 publicRoutes.route( '/recover-password', {
   name: 'recover-password',
   action() {
-    BlazeLayout.render( 'default', { yield: 'recoverPassword' } );
+    ReactLayout.render( Default, { yield: <RecoverPassword /> } );
   }
 });
 
 publicRoutes.route( '/reset-password/:token', {
   name: 'reset-password',
   action() {
-    BlazeLayout.render( 'default', { yield: 'resetPassword' } );
+    ReactLayout.render( Default, { yield: <ResetPassword /> } );
   }
 });

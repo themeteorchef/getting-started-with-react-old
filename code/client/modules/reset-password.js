@@ -1,12 +1,12 @@
 let resetPassword = ( options ) => {
-  _validate( options.form, options.template );
+  _validate( options.form );
 };
 
-let _validate = ( form, template ) => {
-  $( form ).validate( validation( template ) );
+let _validate = ( form ) => {
+  $( form ).validate( validation() );
 };
 
-let validation = ( template ) => {
+let validation = () => {
   return {
     rules: {
       newPassword: {
@@ -29,13 +29,13 @@ let validation = ( template ) => {
         equalTo: "Hmm, your passwords don't match. Try again?"
       }
     },
-    submitHandler() { _handleReset( template ); }
+    submitHandler() { _handleReset(); }
   };
 };
 
-let _handleReset = ( template ) => {
+let _handleReset = () => {
   var token    = FlowRouter.current().params.token,
-      password = template.find( '[name="newPassword"]' ).value;
+      password = $( '[name="newPassword"]' ).val();
 
   Accounts.resetPassword( token, password, ( error ) => {
     if ( error ) {
