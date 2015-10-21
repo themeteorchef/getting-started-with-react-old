@@ -821,6 +821,7 @@ Pretty much what you'd expect. We make use of the inline `{}` bracket syntax, ca
 
 Alright, buckaroo! We did it! We've successfully refactored Base to use React instead of Blaze. How does it feel? Was it as scary as all the übernerds made it out to be? Nah.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Klf5qLV9Ljs" frameborder="0" allowfullscreen></iframe>
+<!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/Klf5qLV9Ljs" frameborder="0" allowfullscreen></iframe> -->
 
 ### Wrap up & summary
+In this recipe, we got a cursory introduction to the React user interface library. We learned how to refactor Blaze templates and logic into React components, how to work with nested components and logic, and even learned how to compensate for the loss of features like Blaze's template helpers. In addition, we learned how to update our routes to use the ReactLayout package to help us render our components.
