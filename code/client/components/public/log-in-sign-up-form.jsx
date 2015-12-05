@@ -11,7 +11,8 @@ LogInSignUpForm = React.createClass({
   },
 
   errorMessages: {
-    emailError: "Please enter a valid emil address"
+    emailError: "Please enter a valid email address",
+    passwordLengthError: "Your password must be at least 8 characters."
   },
 
   styles: {
@@ -38,8 +39,8 @@ LogInSignUpForm = React.createClass({
   },
 
   render() {
-    let {submitStyle} = this.styles;
-    let {emailError} = this.errorMessages;
+    let { submitStyle } = this.styles;
+    let { emailError, passwordLengthError } = this.errorMessages;
 
     return (
       <Formsy.Form
@@ -60,7 +61,9 @@ LogInSignUpForm = React.createClass({
           name="password"
           type="password"
           required
-          floatingLabelText="Password" />
+          floatingLabelText="Password"
+          validations="minLength:8"
+          validationError={passwordLengthError} />
 
         <RaisedButton
           style={submitStyle}

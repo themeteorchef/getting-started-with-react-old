@@ -23,7 +23,7 @@ Login = React.createClass({
   },
 
   render() {
-    let {paperStyle } = this.styles;
+    let { paperStyle } = this.styles;
 
     return (
       <Paper style={paperStyle}>
