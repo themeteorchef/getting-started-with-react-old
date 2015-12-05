@@ -86,7 +86,6 @@ spacebars-compiler@1.0.7
 srp@1.0.4
 standard-minifiers@1.0.2
 stevezhu:lodash@3.10.1
-themeteorchef:jquery-validation@1.14.0
 tracker@1.0.9
 twbs:bootstrap@3.3.6
 ui@1.0.8
