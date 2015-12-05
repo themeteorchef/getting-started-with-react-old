@@ -1,7 +1,15 @@
 AuthenticatedNavigation = React.createClass({
+
   currentUserEmail() {
     return Meteor.user().emails[0].address;
   },
+
+  logout() {
+    // Pass an empty callback so Meteor logout doesn't throw an error
+    // Callback should be optional - Meteor bug?
+    Meteor.logout(()=>{})
+  },
+
   render() {
     return (
       <div id="navbar-collapse" className="collapse navbar-collapse">
@@ -13,7 +21,7 @@ AuthenticatedNavigation = React.createClass({
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.currentUserEmail()} <span className="caret"></span></a>
             <ul className="dropdown-menu" role="menu">
-              <li onClick={Meteor.logout}><a href="#">Logout</a></li>
+              <li onClick={this.logout}><a href="#">Logout</a></li>
             </ul>
           </li>
         </ul>
