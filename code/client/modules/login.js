@@ -2,7 +2,7 @@ let login = ( options ) => {
   _validate( options.form );
 };
 
-let _validate = ( form, template ) => {
+let _validate = ( form ) => {
   $( form ).validate( validation() );
 };
 
