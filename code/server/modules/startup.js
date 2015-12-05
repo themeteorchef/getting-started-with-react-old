@@ -13,8 +13,6 @@ let _generateAccounts = () => Modules.server.generateAccounts();
 
 let _generatePeople = () => Modules.server.generatePeople();
 
-let _setEnvironmentVariables = () => {
-  process.env.MAIL_URL = Meteor.settings.private.MAIL_URL;
-};
+let _setEnvironmentVariables = () => Modules.server.setEnvironmentVariables();
 
 Modules.server.startup = startup;
