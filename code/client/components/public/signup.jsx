@@ -1,9 +1,4 @@
 Signup = React.createClass({
-  getInitialState() {
-    return {
-      loginPath: FlowHelpers.pathFor( 'login' )
-    };
-  },
   componentDidMount() {
     Modules.client.signup({
       form: "#signup"
