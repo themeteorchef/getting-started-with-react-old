@@ -3,7 +3,7 @@ ResetPassword = React.createClass({
     Modules.client.resetPassword( { form: "#reset-password" } );
   },
   handleSubmit( event ) {
-    event.submitHandler();
+    event.preventDefault();
   },
   render() {
     return (
