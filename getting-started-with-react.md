@@ -6,28 +6,28 @@ For this recipe, we'll need to install a couple packages to help us out with get
 ```bash
 meteor add react
 ```
-This is the special sauce. When we install this, we'll get access to React, along with everything we need to make React work with our Meteor application. If you're curious, you can [see what this includes here](http://react-in-meteor.readthedocs.org/en/latest/#whats-in-the-box).
+This is the special sauce. When we install this, we'll get access to React, along with everything we need to make React work with our Meteor application. If you're curious, you can [see what this includes here](https://react-in-meteor.readthedocs.org/en/latest/#whats-in-the-box).
 
 <p class="block-header">Terminal</p>
 
 ```bash
 meteor add kadira:react-layout
 ```
-We'll use this package to make it easy to render React components in our application. This will be used in conjunction with [Flow Router](https://github.com/kadirahq/flow-router) (the router included with [Base](http://themeteorchef.com/base), the starter kit used for this recipe).
+We'll use this package to make it easy to render React components in our application. This will be used in conjunction with [Flow Router](https://github.com/kadirahq/flow-router) (the router included with [Base](https://themeteorchef.com/base), the starter kit used for this recipe).
 
 <div class="note">
   <h3>Additional Packages <i class="fa fa-warning"></i></h3>
-  <p>This recipe relies on several other packages that come as part of <a href="http://themeteorchef.com/base">Base</a>, the boilerplate kit used here on The Meteor Chef. The packages listed above are merely recipe-specific additions to the packages that are included by default in the kit. Make sure to reference the <a href="http://themeteorchef.com/base/packages-included">Packages Included list</a> for Base to ensure you have fulfilled all of the dependencies.</p>
+  <p>This recipe relies on several other packages that come as part of <a href="https://themeteorchef.com/base">Base</a>, the boilerplate kit used here on The Meteor Chef. The packages listed above are merely recipe-specific additions to the packages that are included by default in the kit. Make sure to reference the <a href="https://themeteorchef.com/base/packages-included">Packages Included list</a> for Base to ensure you have fulfilled all of the dependencies.</p>
 </div>
 
 ### The goal
-Our goal with this recipe is to get a basic understanding of React, how it works, and some of the considerations we need to make when moving an application from Blaze (Meteor's default user interface library). To do this, we'll focus on a refactor of [Base](http://themeteorchef.com/base), the starter kit used for recipes here at The Meteor Chef. This will give us a small scope to work within, enough to aid in our comprehension of React but not so much that it's overwhelming. How considerate!
+Our goal with this recipe is to get a basic understanding of React, how it works, and some of the considerations we need to make when moving an application from Blaze (Meteor's default user interface library). To do this, we'll focus on a refactor of [Base](https://themeteorchef.com/base), the starter kit used for recipes here at The Meteor Chef. This will give us a small scope to work within, enough to aid in our comprehension of React but not so much that it's overwhelming. How considerate!
 
-The number one thing to keep in mind about React is that it is _only responsible for the view layer_. This means that anything not related to our templates or template logic does not need to be refactored. Our focus is on taking all of the Blaze-specific code in Base and converting it to React. That's it. Take a deep breath. React has been getting a lot of hype which inevitably leads to fear of being left out. Don't worry, as [it was suggested here](http://themeteorchef.com/blog/react-vs-blaze), React is simply another way to build our interfaces, not law (despite what Mark Zuckerberg and Co. may desire).
+The number one thing to keep in mind about React is that it is _only responsible for the view layer_. This means that anything not related to our templates or template logic does not need to be refactored. Our focus is on taking all of the Blaze-specific code in Base and converting it to React. That's it. Take a deep breath. React has been getting a lot of hype which inevitably leads to fear of being left out. Don't worry, as [it was suggested here](https://themeteorchef.com/blog/react-vs-blaze), React is simply another way to build our interfaces, not law (despite what Mark Zuckerberg and Co. may desire).
 
 #### JSX
 
-To get the job done, we'll be relying on a new syntax (and file format) introduced by React called `JSX`. Using this format, we can embed the HTML in our templates directly in our JavaScript. Wait..why?! This is a convention of React. It sounds scary at first, but the purpose is to keep all of the markup and JavaScript related to our components in one place. If you'd like to learn more about JSX before diving in, it's recommended that you [check out the React vs. Blaze guide here](http://themeteorchef.com/blog/react-vs-blaze/) where we take a closer look at the syntactic differences between the two libraries.
+To get the job done, we'll be relying on a new syntax (and file format) introduced by React called `JSX`. Using this format, we can embed the HTML in our templates directly in our JavaScript. Wait..why?! This is a convention of React. It sounds scary at first, but the purpose is to keep all of the markup and JavaScript related to our components in one place. If you'd like to learn more about JSX before diving in, it's recommended that you [check out the React vs. Blaze guide here](https://themeteorchef.com/blog/react-vs-blaze/) where we take a closer look at the syntactic differences between the two libraries.
 
 Ready to de-Blaze Base and board Spaceship React? Suit up!
 
@@ -54,7 +54,7 @@ A few things to point out. First, notice that when we create a React component i
 
 Next, notice that all component definitions start with a call to `React.createClass()` accepting an object with methods (and properties) defined on it. By default, the `render()` method we've defined here is the only method that our component _must_ have. Everything else is optional depending on the functionality of our component.
 
-Once we have this in place, we can open up `/client/components/index.html` (remember, we renamed this directory from `/templates` so try not to get confused) and copy the contents—excluding the `<template>` tags and paste them _within_ the `return()` statement of our component's `render()` method. Once we've pasted, we'll need to make a few changes to the markup to make sure it's React-friendly. We're going to output the refactored version of this below and step through it. If you get stuck, make sure to [reference the source for the template](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.html).
+Once we have this in place, we can open up `/client/components/login.html` (remember, we renamed this directory from `/templates` so try not to get confused) and copy the contents—excluding the `<template>` tags and paste them _within_ the `return()` statement of our component's `render()` method. Once we've pasted, we'll need to make a few changes to the markup to make sure it's React-friendly. We're going to output the refactored version of this below and step through it. If you get stuck, make sure to [reference the source for the template](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.html).
 
 <p class="block-header">/client/components/public/login.jsx</p>
 
@@ -154,7 +154,7 @@ Login = React.createClass({
 });
 ```
 
-Introducing `componentDidMount()`, [one of many oddly named methods](http://themeteorchef.com/blog/react-vs-blaze/#tmc-react-methods-vs-blaze-methods) in React. Notice that inside, we've placed the contents of the JavaScript from [our template's `onRendered` callback](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.js#L1). Neat! As the name implies, this is the method that's called as soon as our React component is "mounted" or rendered on screen.
+Introducing `componentDidMount()`, [one of many oddly named methods](https://themeteorchef.com/blog/react-vs-blaze/#tmc-react-methods-vs-blaze-methods) in React. Notice that inside, we've placed the contents of the JavaScript from [our template's `onRendered` callback](https://github.com/themeteorchef/base/blob/master/client/templates/public/login.js#L1). Neat! As the name implies, this is the method that's called as soon as our React component is "mounted" or rendered on screen.
 
 This is more-or-less identical to how Blaze's `Template.<name>.onRendered()` method works. Easy enough for us, we can just drop our module in and we're done! Well, almost. As we'll see, we'll need to make some microscopic changes to our modules to ensure they work well with our components.
 
@@ -209,7 +209,7 @@ Underwhelming! Hey, practice makes perfect. Again, we want to watch out for the 
 5. Adding a `handleSubmit` method to our component with an `event` argument and call to `event.preventDefault()` inside.
 6. Adding a `componentDidMount()` method, passing a call to our `Modules.client.signup` method.
 
-While these aren't the _only_ considerations you'll have to make with React, these are the basics (our focus for this recipe). In respect to Base, because we're relying on [the module pattern](http://themeteorchef.com/snippets/using-the-module-pattern-with-meteor/) for the bulk of our logic, we don't need to do too much. In your own code, beware that if you store a lot of logic in your templates, there's a good chance you'll have to do a good amount of refactoring. Fair warning!
+While these aren't the _only_ considerations you'll have to make with React, these are the basics (our focus for this recipe). In respect to Base, because we're relying on [the module pattern](https://themeteorchef.com/snippets/using-the-module-pattern-with-meteor/) for the bulk of our logic, we don't need to do too much. In your own code, beware that if you store a lot of logic in your templates, there's a good chance you'll have to do a good amount of refactoring. Fair warning!
 
 Okay. Hanging in there? Let's keep chugging on these refactors. Next up is our `recoverPassword` template.
 
@@ -791,7 +791,7 @@ FlowHelpers = {
 };
 ```
 
-We've technically lost some weight here. Remember, before, we were making use of [global template helpers](http://themeteorchef.com/snippets/using-global-template-helpers) to get back the values above. Now, because we're removing Blaze, all we need are good ol' fashioned functions. For convenience, we've created a global variable at the bottom of our helpers file called `FlowHelpers`, assigning each of the methods to a parameter name so we can call them easily later.
+We've technically lost some weight here. Remember, before, we were making use of [global template helpers](https://themeteorchef.com/snippets/using-global-template-helpers) to get back the values above. Now, because we're removing Blaze, all we need are good ol' fashioned functions. For convenience, we've created a global variable at the bottom of our helpers file called `FlowHelpers`, assigning each of the methods to a parameter name so we can call them easily later.
 
 The big change here is in the `pathFor` helper. Here, we've removed all references to the `hash` and `view` properties that we got from our Spacebars helpers (the hash is what contained the values assigned like `{{pathFor hashProp="something" anotherHashProp="this thing"}}`). Here, we don't have that so we've ripped it all out. Instead, we accept the `path` value like we did before and update the `hash` value to simply be `params`. When this is called then, our code will look like `FlowHelpers.pathFor( 'routeName', { paramName: 'blah', query: { queryParam: 'blah' } } );`. Despite the usage of objects, it's more-or-less what we had with the original helper. 
 
