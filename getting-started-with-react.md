@@ -386,6 +386,9 @@ AuthenticatedNavigation = React.createClass({
   currentUserEmail() {
     return Meteor.user().emails[0].address;
   },
+  handleLogout() {
+    Meteor.logout();
+  },
   render() {
     return (
       <div id="navbar-collapse" className="collapse navbar-collapse">
@@ -397,7 +400,7 @@ AuthenticatedNavigation = React.createClass({
           <li className="dropdown">
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.currentUserEmail()} <span className="caret"></span></a>
             <ul className="dropdown-menu" role="menu">
-              <li onClick={Meteor.logout}><a href="#">Logout</a></li>
+              <li onClick={this.handleLogout}><a href="#">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -405,6 +408,7 @@ AuthenticatedNavigation = React.createClass({
     );
   }
 });
+
 ```
 A little more action! First, notice that the contents of this file are nearly identical to our existing `authenticatedNavigation` template in Blaze. The difference is that instead of just including our two `<ul></ul>` elements, we're wrapping them in the `#navbar-collapse` element. As you'll see next, we'll do the same thing with our `publicNavigation` template's refactor, introducing a bit of repetition. This is a pretty big gotcha with React. 
 
@@ -412,14 +416,14 @@ When we're returning the markup/`JSX` for our component, React will throw a temp
 
 With that out of the way, notice we're starting to mimic our Blaze template helpers a little bit with our call to `this.currentUserEmail()`, a method that returns the logged in user's email address. This is equivalent to our call to `{{currentUser.emails.[0].address}}` in our Blaze template. Again, we invoke the method here to get the return value (without this, it would just be empty).
 
-Lastly, notice that in order to handle the logout option for our users, we've added an `onClick` event to the "Logout" element in our dropdown menu. This simply calls to `Meteor.logout` _without_ the invocation `()`. Wait...how does that work? Well, when our event is called, the function specified here will be invoked for us so we can skip it. 
+Lastly, notice that in order to handle the logout option for our users, we've added an `onClick` event to the "Logout" element in our dropdown menu. This simply calls `handleLogout`, which in turn calls `Meteor.logout`, We can't call Meteor.logout directly from `onClick`, as it passes the event as a parameter which Meteor.logout isn't expecting.
 
 <div class="note">
   <h3>Why wrap the email part? <i class="fa fa-warning"></i></h3>
   <p>You may be wondering, "couldn't we just pass the result of our <code>currentUserEmail</code> method directly?" Yep! The point here is to showcase two different means for calling and using functions in our JSX. You could just as easily replace <code>{this.currentUserEmail()}</code> with <code>{Meteor.user().emails[0].address}</code>.</p>
 </div>
 
-The difference between this and the email is that we want to call `currentUserEmail()` immediately when the component renders and `Meteor.logout` only when the `onClick` event fires. If you invoked this automatically, as soon as this component renders the user would be logged out! Unless you're a trickster, you probably don't want that.
+The difference between this and logout is that we want to call `currentUserEmail()` immediately when the component renders and `this.handleLogout` only when the `onClick` event fires. If you invoked this automatically as `this.handleLogout()`, as soon as this component renders the user would be logged out! Unless you're a trickster, you probably don't want that.
 
 Okay, that's it! Oh...wait. That `FlowHelpers` part. Ignore that until we get to the section where we refactor our helpers. [M'kay](https://www.youtube.com/watch?v=KqOsrniBooQ)?
 
